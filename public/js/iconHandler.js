@@ -40,6 +40,27 @@ footers.forEach(function (footer) {
   });
 });
 
+scrapButtons.forEach((tag) => {
+  tag.addEventListener('click', () => {
+    const myId = document.querySelector('#my-id');
+
+    if(myId) {
+      const owner = tag.parentNode.parentElement.querySelector('.owner-name').value;
+      const ownerContent = tag.parentNode.parentElement.querySelector('.owner-content').value;
+
+      axios.post('/post/scrap', {
+        owner: owner,
+        ownerContent: ownerContent,
+      }).
+      then(() => {
+        location.reload();
+      }).catch((err) => {
+        console.error(err);
+      });
+    }
+  });
+});
+
 sharingButtons.forEach((tag) => {
   tag.addEventListener('click', () => {
     const myId = document.querySelector('#my-id');

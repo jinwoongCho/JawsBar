@@ -41,6 +41,7 @@ module.exports = class User extends Sequelize.Model {
   static associate(db) {
     // User:Post = 1:N
     db.User.hasMany(db.Post);
+    db.User.hasMany(db.Scrap);
     // User:User = N:M
     // 내가 팔로잉 하는 사람이 여러명
     db.User.belongsToMany(db.User, {

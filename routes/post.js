@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { User, Post, Hashtag } = require('../models');
+const { User, Post, Hashtag, Scrap } = require('../models');
 const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
@@ -65,6 +65,20 @@ router.post('/share', isLoggedIn, async (req, res, next) => {
     const share = await Post.create({
       content: req.body.ownerContent,
       subContent: `${req.body.owner} 로부터 공유됨`,
+      UserId: req.user.id,
+    });
+    res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post('/scrap', isLoggedIn, upload2.none(), async (req, res, next) => {
+  try{
+    const scrap = await Scrap.create({
+      content: req.body.ownerContent,
+      subContent: `${req.body.owner} 로부터 스크랩됨`,
       UserId: req.user.id,
     });
     res.redirect('/');

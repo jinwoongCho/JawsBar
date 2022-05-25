@@ -1,6 +1,6 @@
 const express = require('express');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
-const { Post, User, Hashtag } = require('../models');
+const { Post, User, Hashtag, Scrap } = require('../models');
 
 const router = express.Router();
 
@@ -28,10 +28,6 @@ router.get('/join', isNotLoggedIn, (req, res) => {
   res.render('join', { title: 'Join to - prj-name' });
 });
 
-router.get('/scrap', isLoggedIn, (req, res) => {
-  res.render('scrap', { title: 'Scrap'});
-});
-
 router.get('/', async (req, res, next) => {
   try {
     const posts = await Post.findAll({
@@ -44,6 +40,25 @@ router.get('/', async (req, res, next) => {
     res.render('main', {
       title: 'Jaws bar',
       twits: posts,
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.get('/scrap', async (req, res, next) => {
+  try {
+    const scraps = await Scrap.findAll({
+      include: {
+        model: User,
+        attributes: ['id', 'nick'],
+      },
+      order: [['createdAt', 'DESC']],
+    });
+    res.render('scrap', {
+      title: 'Jaws bar',
+      scraps : scraps,
     });
   } catch (err) {
     console.error(err);
